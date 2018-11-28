@@ -1,21 +1,26 @@
 # -*- coding: utf-8 -*-
 from globalSetting import *
+from wikiType import wikiType
 
 
-def cpJa(url): return "http://ja.wikipedia.org"+url
-def cpEn(url): return "http://en.wikipedia.org"+url
-
+cpJa = lambda url: "http://ja.wikipedia.org"+url
+cpEn = lambda url: "http://en.wikipedia.org"+url
 unicodeType = type(u"例")
 
 # regular expression patterns
-textEngPattern = re.compile(ur"英.*[:：][ ]*([a-zA-z ]+)[)）]",re.UNICODE)
-urlEngPattern = re.compile(ur"英.*[:：][ ]*([a-zA-z ]+)$", re.UNICODE)
+textEngPattern = re.compile(ur"英.*[:：][\s]*([a-zA-z0-9 ]+)[)）]",re.UNICODE)
+urlEngPattern = re.compile(ur"英.*[:：][\s]*([a-zA-z0-9 ]+)$", re.UNICODE)
+bracketPattern = re.compile(ur"[(（\[].*[)）\]]", re.UNICODE)
+emptyString = ur''
+
+# delete brackets(also delete the context in the brackets) around a word
+# To prevent these kind of words: 京都（日本） kyoto[1] -> 京都　kyoto
+delBrackets = lambda s: re.sub(bracketPattern,emptyString,s)
 
 #Output: wiki type, one of these: people organization location company others
 def wikiType(soup):
     return "others"
 
-# Input: soup,
 # Output: The english translation of the title of the soup if exists else "NONE"
 def wikiFindEngWordFromText(soup):
     enWord = "NONE"

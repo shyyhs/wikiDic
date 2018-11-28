@@ -5,11 +5,8 @@ HASHN = 1000007
 hashT = [0]*max((HASHN+1),MAX_PAIR*3)
 def hash(url):
     h=1
-    for i in url:
-        h*=ord(i)
-        if (h>10*HASHN): h%=HASHN
-        
-    return h%HASHN
+    for i in url: h=(h*ord(i))%HASHN
+    return h
 
 
 def logSetting():
@@ -41,11 +38,13 @@ def crawlEntry(sourceUrl,PAIR_LIMIT):
 
     #Output things
     urlDic = wikiUrlDic(soup)
-    jaWord = webTitle(soup).strip()
-    enWord = wikiEnWord(soup).strip()
+    jaWord = webTitle(soup)
+    enWord = wikiEnWord(soup)
     wType = wikiType(soup)
     #Prepare for output
     if (enWord == "NONE"): return
+    jaWord = delBrackets(jaWord.strip())
+    enWord = delBrackets(enWord.strip())
     outString = jaWord+','+enWord+','+wType+'\n'
     outString = outString.encode('utf-8')
     #Output
