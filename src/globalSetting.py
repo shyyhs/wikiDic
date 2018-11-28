@@ -21,6 +21,12 @@ if (os.path.exists(workDir)==False): os.mkdir(workDir)
 #The output file
 fileOut = open(outFileName, "a+")
 
+#defualt url
+defaultUrl = "https://ja.wikipedia.org/wiki/%E6%97%A5%E6%9C%AC"
+MAX_DEP = 2
+MAX_PAIR = 100
+
+
 
 if (__name__=="__main__"):
     print("globalSetting Test begins.")

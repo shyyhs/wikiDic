@@ -8,8 +8,8 @@ def cpEn(url): return "http://en.wikipedia.org"+url
 unicodeType = type(u"例")
 
 # regular expression patterns
-urlEngPattern = re.compile(ur"英.*[:：][ ]*([a-zA-z0-9 ]+)[)）]",re.UNICODE)
-engPattern = re.compile(ur"英.*[:：][ ]*([a-zA-z0-9 ]+)$", re.UNICODE)
+textEngPattern = re.compile(ur"英.*[:：][ ]*([a-zA-z ]+)[)）]",re.UNICODE)
+urlEngPattern = re.compile(ur"英.*[:：][ ]*([a-zA-z ]+)$", re.UNICODE)
 
 #Output: wiki type, one of these: people organization location company others
 def wikiType(soup):
@@ -19,7 +19,7 @@ def wikiType(soup):
 # Output: The english translation of the title of the soup if exists else "NONE"
 def wikiFindEngWordFromText(soup):
     enWord = "NONE"
-    result = urlEngPattern.search(soup.get_text())
+    result = textEngPattern.search(soup.get_text())
     if (result is not None):
         enWord = result.group(1).strip()
         return enWord
@@ -31,7 +31,7 @@ def wikiFindEngWordFromUrl(soup):
         if (link.get_text() == "English"):
             title = link.get("title")
             if (title is None): continue
-            result = engPattern.search(title)
+            result = urlEngPattern.search(title)
             if (result is not None):
                 enWord = result.group(1).strip()
                 return enWord
@@ -55,28 +55,6 @@ def wikiUrlDic(soup):
     for link in soup.find_all('a',href=re.compile("^/wiki/((?!:).)*$")):
         urlDic[link.get('title')] = cpJa(link.get('href'))
     return urlDic
-
-def cookSoup(url):
-    html = requests.get(url).text
-    soup = sp(html,"lxml")
-    return soup
-
-def crawlEntry(sourceUrl,depth,MAX_DEPTH):
-    if (depth == MAX_DEPTH): return 
-    try: soup = cookSoup(sourceUrl)
-    except: return
-
-    urlDic = wikiUrlDic(soup)
-    jaWord = webTitle(soup)
-    enWord = wikiEnWord(soup)
-    wType = wikiType(soup)
-    if (enWord == "NONE"): return
-    outString = jaWord+','+enWord+','+wType
-    outString = outString.encode('utf-8')
-    print (outString)
-    fileOut.write(outString)
-    for subUrl in urlDic.values():
-        crawlEntry(subUrl, depth+1, MAX_DEPTH)
 
 if (__name__=="__main__"):
     print ("utils begins")
