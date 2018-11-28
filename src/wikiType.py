@@ -4,6 +4,7 @@ from globalSetting import *
 def feature(soup):
     featureDic = {}
     text = soup.get_text()
+
     
 def locationType(soup):
     return 1

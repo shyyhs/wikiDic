@@ -1,13 +1,14 @@
 from globalSetting import *
 from utils import *
 
+
+#These should be put the in globalVar but it's a little special
 HASHN = 1000007
 hashT = [0]*max((HASHN+1),MAX_PAIR*3)
 def hash(url):
     h=1
     for i in url: h=(h*ord(i))%HASHN
     return h
-
 
 def logSetting():
     logging.basicConfig(
@@ -41,6 +42,7 @@ def crawlEntry(sourceUrl,PAIR_LIMIT):
     jaWord = webTitle(soup)
     enWord = wikiEnWord(soup)
     wType = wikiType(soup)
+
     #Prepare for output
     if (enWord == "NONE"): return
     jaWord = delBrackets(jaWord.strip())
