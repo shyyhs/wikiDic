@@ -2,9 +2,11 @@ import os
 import sys
 import time
 import logging
+
 import requests
 from bs4 import BeautifulSoup as sp
 import re
+import lxml
 
 # Time
 localtime = time.asctime(time.localtime(time.time()))
