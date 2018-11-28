@@ -1,6 +1,17 @@
 from globalSetting import *
 from utils import *
 
+HASHN = 1000007
+hashT = [0]*max((HASHN+1),MAX_PAIR*3)
+def hash(url):
+    h=1
+    for i in url:
+        h*=ord(i)
+        if (h>10*HASHN): h%=HASHN
+        
+    return h%HASHN
+
+
 def logSetting():
     logging.basicConfig(
         filename = logFileName,
@@ -18,9 +29,12 @@ def cookSoup(url):
 
 pairNum=0
 def crawlEntry(sourceUrl,PAIR_LIMIT):
+    h = hash(sourceUrl)
+    if (hashT[h]): return
+    hashT[h]=1
+
     global pairNum
-    pairNum+=1
-    if (pairNum == PAIR_LIMIT): return
+    if (pairNum > PAIR_LIMIT): return
 
     try: soup = cookSoup(sourceUrl)
     except: return
@@ -37,6 +51,7 @@ def crawlEntry(sourceUrl,PAIR_LIMIT):
     #Output
     print (outString)
     fileOut.write(outString)
+    pairNum+=1
 
     #Recursively crawl
     for subUrl in urlDic.values():
@@ -44,7 +59,7 @@ def crawlEntry(sourceUrl,PAIR_LIMIT):
 
 def crawl(firstUrl=defaultUrl, PAIR_LIMIT=MAX_PAIR):
     pairNum=0
-    crawlEntry(firstUrl,PAIR_LIMIT)
+    crawlEntry(firstUrl,10)
 
 if (__name__=="__main__"):
     print ("clawler begins")
