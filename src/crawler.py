@@ -30,9 +30,11 @@ def crawlEntry(sourceUrl,PAIR_LIMIT):
     #Output things
     jaWord = webTitle(soup)
     enWord = wikiEnWord(soup)
-    if (checkHash(sourceUrl,jaWord)): return #exit when visited already
-    if (jaWord=="NONE" or enWord=="NONE"): return #no title, not wiki site
+    if (checkHash(sourceUrl,jaWord)==0): return #exit when visited already
+    if (jaWord=="NONE"): return #no title, not wiki site
+    #if (enWord == "NONE"): return
     wType = wikiType(soup)
+
     #Prepare for output
     jaWord = delBrackets(jaWord.strip())
     enWord = delBrackets(enWord.strip())
@@ -43,6 +45,7 @@ def crawlEntry(sourceUrl,PAIR_LIMIT):
     fileOut.write(outString)
     #Recursively crawl
     pairNum+=1
+    if (pairNum%10000==0): hashSave()
     urlDic = wikiUrlDic(soup)
     for subUrl in urlDic.values(): crawlEntry(subUrl,PAIR_LIMIT)
 
@@ -53,7 +56,13 @@ def crawl(firstUrl=defaultUrl, PAIR_LIMIT=MAX_PAIR):
 if (__name__=="__main__"):
     print ("clawler begins")
     print ("---------------------------------")
-    logSetting()    
+    logSetting()
+
+    continueFlag = 0
+    preStatusFilePath = statusFileName
+    if (continueFlag == 1):
+        print ("Load the previous search status")
+        hashLoad(preStatusFilePath)
     crawl()
 
     

@@ -13,16 +13,40 @@ def hash(s):
 
 def checkHash(url,word):
     ht = hash(url)
-    hw = hash(Word)
-    if (hashU[ht]==1 and hashW[hw]==1): return 0
+    hw = hash(word)
+    if ((hashU[ht]==1) and (hashW[hw]==1)): return 0
     hashU[ht]=1
     hashW[hw]=1
     return 1
 
 def hashSave():
-    stFile = open(statusFileName,'w+')
+    with open(statusFileName,'w') as stFile:  
+        stFile.write(str(sum(hashU))+"\n")
+        for i in range(len(hashU)):
+            if (hashU[i]): stFile.write(str(i)+"\n")
+        stFile.write(str(sum(hashW))+"\n")
+        for i in range(len(hashW)):
+            if (hashW[i]): stFile.write(str(i)+"\n")
+
+def hashLoad(statusFileName=statusFileName):
+    with open(statusFileName,'r') as stFile:
+        urlN = int(stFile.readline())
+        print (int(urlN))
+        for i in range(urlN): 
+            index = int(stFile.readline())
+            hashU[index] = 1
+        wordN = int(stFile.readline())
+        for i in range(wordN): 
+            index = int(stFile.readline())
+            hashW[index] = 1
+
 
 if (__name__=="__main__"):
     print ("hash tesing")
-    print (hash(u'日本語'))
+    hashU[1] = 1
+    hashU[10000] = 1
+    hashW[0] = 1
+    hashW[HASHN] = 1
+    hashSave()
+    hashLoad()
 

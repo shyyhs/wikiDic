@@ -16,7 +16,7 @@ month, day = localtime.split()[1:3]
 workDir = "../data/"
 outFileName = workDir + "wiki_properNoun.ja-en.mix"
 logFileName = workDir + month+day+".log"
-statusFileName = wordDir + "status.txt"
+statusFileName = workDir + "status.txt"
 if (os.path.exists(workDir)==False): os.mkdir(workDir)
 
 #The output file
