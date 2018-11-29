@@ -18,9 +18,6 @@ emptyString = ur''
 # To prevent these kind of words: 京都（日本） kyoto[1] -> 京都　kyoto
 delBrackets = lambda s: re.sub(bracketPattern,emptyString,s)
 
-#Output: wiki type, one of these: people organization location company others
-def wikiType(soup):
-    return "others"
 
 # Output: The english translation of the title of the soup if exists else "NONE"
 def wikiFindEngWordFromText(soup):
