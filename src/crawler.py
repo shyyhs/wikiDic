@@ -12,11 +12,6 @@ def logSetting():
     )
     logging.info("logging available")
 
-def cookSoup(url):
-    html = requests.get(url).text
-    soup = sp(html,"lxml")
-    return soup
-
 pairNum=0
 def crawlEntry(sourceUrl,PAIR_LIMIT):
     """
@@ -24,23 +19,9 @@ def crawlEntry(sourceUrl,PAIR_LIMIT):
     """
     global pairNum
     if (pairNum > PAIR_LIMIT): return
-    try: soup = cookSoup(sourceUrl)
-    except: return
-
-    #Output things
-    jaWord = webTitle(soup)
-    enWord = wikiEnWord(soup)
-    if (checkHash(sourceUrl,jaWord)==0): return #exit when visited already
-    if (jaWord=="NONE"): return #no title, not wiki site
-    #if (enWord == "NONE"): return
-    wType = wikiType(soup)
-
-    #Prepare for output
-    jaWord = delBrackets(jaWord.strip())
-    enWord = delBrackets(enWord.strip())
-    outString = jaWord+','+enWord+','+wType+'\n'
-    outString = outString.encode('utf-8')
-    #Output
+    outString,soup = wikiProcess(sourceUrl)
+    if (outString == None): return
+    # Output
     print (outString)
     fileOut.write(outString)
     #Recursively crawl
@@ -50,7 +31,6 @@ def crawlEntry(sourceUrl,PAIR_LIMIT):
     for subUrl in urlDic.values(): crawlEntry(subUrl,PAIR_LIMIT)
 
 def crawl(firstUrl=defaultUrl, PAIR_LIMIT=MAX_PAIR):
-    pairNum=0
     crawlEntry(firstUrl,10)
 
 if (__name__=="__main__"):
@@ -63,6 +43,7 @@ if (__name__=="__main__"):
     if (continueFlag == 1):
         print ("Load the previous search status")
         hashLoad(preStatusFilePath)
+
     crawl()
 
     

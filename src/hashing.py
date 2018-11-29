@@ -2,8 +2,8 @@
 from globalSetting import *
 
 HASHN = 1000007
-hashU = [0]*max((HASHN+1),MAX_PAIR*3)
-hashW = [0]*max((HASHN+1),MAX_PAIR*3)
+hashU = [0]*(HASHN+1)
+hashW = [0]*(HASHN+1)
 
 # double hash
 def hash(s):

@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from globalSetting import *
+from hashing import *
 from wikiType import wikiType
 
 
@@ -61,6 +62,33 @@ def wikiUrlDic(soup):
     for link in soup.find_all('a',href=re.compile("^/wiki/((?!:).)*$")):
         urlDic[link.get('title')] = cpJa(link.get('href'))
     return urlDic
+
+def cookSoup(url):
+    html = requests.get(url).text
+    soup = sp(html,"lxml")
+    return soup
+
+def wikiProcess(sourceUrl):
+    """
+    return 0 if NG
+    else return output string
+    """
+    try: soup = cookSoup(sourceUrl)
+    except: return None,None
+    #Output things
+    jaWord = webTitle(soup)
+    enWord = wikiEnWord(soup)
+    if (checkHash(sourceUrl,jaWord)==0): return None,None#exit when visited already
+    if (jaWord=="NONE"): return None,None#no title, not wiki site
+    #if (enWord == "NONE"): return
+    wType = wikiType(soup)
+
+    #Prepare for output
+    jaWord = delBrackets(jaWord.strip())
+    enWord = delBrackets(enWord.strip())
+    outString = jaWord+','+enWord+','+wType+'\n'
+    outString = outString.encode('utf-8')
+    return outString,soup
 
 if (__name__=="__main__"):
     print ("utils begins")
