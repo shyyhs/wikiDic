@@ -78,11 +78,11 @@ def wikiProcess(sourceUrl):
     #Output things
     jaWord = webTitle(soup)
     enWord = wikiEnWord(soup)
+    if (enWord == "NONE"): return None,soup
     if (checkHash(sourceUrl,jaWord)==0): return None,None#exit when visited already
     if (jaWord=="NONE"): return None,None#no title, not wiki site
     #if (enWord == "NONE"): return
     wType = wikiType(soup)
-
     #Prepare for output
     jaWord = delBrackets(jaWord.strip())
     enWord = delBrackets(enWord.strip())

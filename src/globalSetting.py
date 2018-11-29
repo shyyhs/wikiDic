@@ -1,6 +1,7 @@
 import os
 import sys
 import time
+import Queue
 import logging
 
 import requests
@@ -24,8 +25,12 @@ fileOut = open(outFileName, "a+")
 
 #defualt url
 defaultUrl = "https://ja.wikipedia.org/wiki/%E6%97%A5%E6%9C%AC"
+defaultUrl = "https://ja.wikipedia.org/wiki/%E8%8F%B1%E5%9E%A3%E5%BB%BB%E8%88%B9"
 MAX_DEP = 2
 MAX_PAIR = 100
+HASHN = 1000007
+MAX_QUE = 1000000
+urlQue = Queue.Queue(MAX_QUE)
 
 
 

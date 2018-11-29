@@ -12,26 +12,29 @@ def logSetting():
     )
     logging.info("logging available")
 
-pairNum=0
-def crawlEntry(sourceUrl,PAIR_LIMIT):
-    """
-    There're many 'return's to speedup
-    """
-    global pairNum
-    if (pairNum > PAIR_LIMIT): return
+def crawlEntry(sourceUrl):
+    printFlag=0
     outString,soup = wikiProcess(sourceUrl)
-    if (outString == None): return
-    # Output
-    print (outString)
-    fileOut.write(outString)
-    #Recursively crawl
-    pairNum+=1
-    if (pairNum%10000==0): hashSave()
-    urlDic = wikiUrlDic(soup)
-    for subUrl in urlDic.values(): crawlEntry(subUrl,PAIR_LIMIT)
+    if (soup == None): return None,0
+    if (outString is not None): 
+        print (outString)
+        fileOut.write(outString)
+        printFlag=1
+    return wikiUrlDic(soup),printFlag
 
 def crawl(firstUrl=defaultUrl, PAIR_LIMIT=MAX_PAIR):
-    crawlEntry(firstUrl,10)
+    pairNum = 0
+    urlQue.put(firstUrl)
+    while (not urlQue.empty()):
+        urlDic,pairAdd = crawlEntry(urlQue.get())
+        if (urlDic==None): continue
+        pairNum+= pairAdd
+        if (pairNum>=MAX_PAIR): break
+        if (pairNum%10000==0): hashSave()
+        for url in urlDic.values():
+            if (not urlQue.full()):
+                urlQue.put(url)
+
 
 if (__name__=="__main__"):
     print ("clawler begins")
