@@ -53,6 +53,7 @@ def webTitle(soup):
     caption = soup.find("h1")
     if (caption is not None):
         return caption.get_text()
+    esle: return "NONE"
 
 # Input:soup, Output: dict{"title":"url"}
 def wikiUrlDic(soup):

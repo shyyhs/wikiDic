@@ -1,14 +1,6 @@
 from globalSetting import *
 from utils import *
-
-
-#These should be put the in globalVar but it's a little special
-HASHN = 1000007
-hashT = [0]*max((HASHN+1),MAX_PAIR*3)
-def hash(url):
-    h=1
-    for i in url: h=(h*ord(i))%HASHN
-    return h
+from hashing import *
 
 def logSetting():
     logging.basicConfig(
@@ -27,24 +19,21 @@ def cookSoup(url):
 
 pairNum=0
 def crawlEntry(sourceUrl,PAIR_LIMIT):
-    h = hash(sourceUrl)
-    if (hashT[h]): return
-    hashT[h]=1
-
+    """
+    There're many 'return's to speedup
+    """
     global pairNum
     if (pairNum > PAIR_LIMIT): return
-
     try: soup = cookSoup(sourceUrl)
     except: return
 
     #Output things
-    urlDic = wikiUrlDic(soup)
     jaWord = webTitle(soup)
     enWord = wikiEnWord(soup)
+    if (checkHash(sourceUrl,jaWord)): return #exit when visited already
+    if (jaWord=="NONE" or enWord=="NONE"): return #no title, not wiki site
     wType = wikiType(soup)
-
     #Prepare for output
-    if (enWord == "NONE"): return
     jaWord = delBrackets(jaWord.strip())
     enWord = delBrackets(enWord.strip())
     outString = jaWord+','+enWord+','+wType+'\n'
@@ -52,11 +41,10 @@ def crawlEntry(sourceUrl,PAIR_LIMIT):
     #Output
     print (outString)
     fileOut.write(outString)
-    pairNum+=1
-
     #Recursively crawl
-    for subUrl in urlDic.values():
-        crawlEntry(subUrl,PAIR_LIMIT)
+    pairNum+=1
+    urlDic = wikiUrlDic(soup)
+    for subUrl in urlDic.values(): crawlEntry(subUrl,PAIR_LIMIT)
 
 def crawl(firstUrl=defaultUrl, PAIR_LIMIT=MAX_PAIR):
     pairNum=0
