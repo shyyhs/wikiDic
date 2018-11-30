@@ -12,6 +12,7 @@ unicodeType = type(u"例")
 textEngPattern = re.compile(ur"英.*[:：][\s]*([a-zA-z0-9 ]+)[)）]",re.UNICODE)
 urlEngPattern = re.compile(ur"英.*[:：][\s]*([a-zA-z0-9 ]+)$", re.UNICODE)
 bracketPattern = re.compile(ur"[(（\[].*[)）\]]", re.UNICODE)
+numberPattern = re.compile(ur"[0-9]+", re.UNICODE)
 emptyString = ur''
 
 # delete brackets(also delete the context in the brackets) around a word
@@ -75,6 +76,7 @@ def wikiProcess(sourceUrl):
     #Output things
     jaWord = webTitle(soup)
     enWord = wikiEnWord(soup)
+    if (numberPattern.search(jaWord) is not None): return None,soup
     if (enWord == "NONE"): return None,soup
     if (checkHash(sourceUrl,jaWord)==0): return None,None#exit when visited already
     if (jaWord=="NONE"): return None,None#no title, not wiki site
