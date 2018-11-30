@@ -15,6 +15,7 @@ bracketPattern = re.compile(ur"[(（\[].*[)）\]]", re.UNICODE)
 numberPattern = re.compile(ur"[0-9]+", re.UNICODE)
 emptyLinePattern = re.compile(ur"^\s*$",re.UNICODE)
 linkRedundantPattern = re.compile(ur"(#.*$)",re.UNICODE)
+enWordPattern = re.compile(ur"[a-zA-Z ]+",re.UNICODE)
 emptyString = ur''
 
 # delete brackets(also delete the context in the brackets) around a word
@@ -53,7 +54,9 @@ def wikiEnWord(soup):
 def webTitle(soup): 
     caption = soup.find("h1")
     if (caption is not None):
-        return caption.get_text()
+        captionText = caption.get_text()
+        if (enWordPattern.search(captionText) is not None): return "NONE"
+        return captionText
     else: return "NONE"
 
 # Input:soup, Output: dict{"title":"url"}
