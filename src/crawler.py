@@ -26,6 +26,7 @@ def crawlEntry(sourceUrl):
 
 def crawl():
     if (urlQue.empty()==True): urlQue.put(defaultUrl)
+
     pairNum = 1
     while (not urlQue.empty()):
         nowUrl = urlQue.get()

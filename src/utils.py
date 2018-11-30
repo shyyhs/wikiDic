@@ -9,13 +9,13 @@ cpEn = lambda url: "http://en.wikipedia.org"+url
 unicodeType = type(u"例")
 
 # regular expression patterns
-textEngPattern = re.compile(ur"英.*[:：][\s]*([a-zA-z0-9 ]+)[)）]",re.UNICODE)
-urlEngPattern = re.compile(ur"英.*[:：][\s]*([a-zA-z0-9 ]+)$", re.UNICODE)
+textEngPattern = re.compile(ur"[(（].{0,20}?英.{0,5}?[:：].{0,2}?([a-zA-Z-' ]+).{0,25}?[)）]",re.UNICODE)
+urlEngPattern = re.compile(ur".{0,1}?英.{0,5}?[:：][\s]{0,1}?([a-zA-Z-' ]+)[\s]*$", re.UNICODE)
 bracketPattern = re.compile(ur"[(（\[].*[)）\]]", re.UNICODE)
 numberPattern = re.compile(ur"[0-9]+", re.UNICODE)
 emptyLinePattern = re.compile(ur"^\s*$",re.UNICODE)
 linkRedundantPattern = re.compile(ur"(#.*$)",re.UNICODE)
-enWordPattern = re.compile(ur"[a-zA-Z ]+",re.UNICODE)
+enWordPattern = re.compile(ur"[a-zA-Z-' ]+",re.UNICODE)
 emptyString = ur''
 
 # delete brackets(also delete the context in the brackets) around a word
@@ -29,7 +29,6 @@ def wikiFindEngWordFromText(soup):
     result = textEngPattern.search(soup.get_text())
     if (result is not None):
         enWord = result.group(1).strip()
-        return enWord
     return enWord
 
 def wikiFindEngWordFromUrl(soup):
@@ -38,26 +37,42 @@ def wikiFindEngWordFromUrl(soup):
         if (link.get_text() == "English"):
             title = link.get("title")
             if (title is None): continue
+            # By the english description, not reliable
             result = urlEngPattern.search(title)
             if (result is not None):
                 enWord = result.group(1).strip()
                 return enWord
+            # Go to the english link and get the Title
+            enHref = link.get('href')
+            if (enHref is not None):
+                enWord = webEnTitle(cookSoup(enHref)) 
+                if (enWord!="NONE"):
+                    return enWord
     return enWord
 
 def wikiEnWord(soup):
-    enWord = wikiFindEngWordFromText(soup)
+    enWord = wikiFindEngWordFromUrl(soup)
     if (enWord == "NONE"):
-        enWord = wikiFindEngWordFromUrl(soup)
+        enWord = wikiFindEngWordFromText(soup)
     return enWord
 
 # Input: soup, Output: Wiki Title
-def webTitle(soup): 
+def webJaTitle(soup): 
     caption = soup.find("h1")
     if (caption is not None):
         captionText = caption.get_text()
         if (enWordPattern.search(captionText) is not None): return "NONE"
-        return captionText
+        return captionText.strip()
     else: return "NONE"
+
+def webEnTitle(soup):
+    caption = soup.find("h1")
+    if (caption is not None):
+        captionText = caption.get_text()
+        if (enWordPattern.search(captionText) is None): return "NONE"
+        return captionText.strip()
+    else: return "NONE"
+
 
 # Input:soup, Output: dict{"title":"url"}
 def wikiUrlDic(soup):
@@ -79,11 +94,11 @@ def wikiProcess(sourceUrl):
     try: soup = cookSoup(sourceUrl)
     except: return None,None
     #Output things
-    jaWord = webTitle(soup)
+    jaWord = webJaTitle(soup)
     enWord = wikiEnWord(soup)
+    if (checkHash(sourceUrl,jaWord)==0): return None,None#exit when visited already
     if (numberPattern.search(jaWord) is not None): return None,soup
     if (enWord == "NONE"): return None,soup
-    if (checkHash(sourceUrl,jaWord)==0): return None,None#exit when visited already
     if (jaWord=="NONE"): return None,None#no title, not wiki site
     #if (enWord == "NONE"): return
     wType = wikiType(soup)
