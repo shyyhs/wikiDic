@@ -21,14 +21,14 @@ statusFileName = workDir + "status.txt"
 if (os.path.exists(workDir)==False): os.mkdir(workDir)
 
 #The output file
-fileOut = open(outFileName, "a+")
+fileOut = open(outFileName, "a")
 
 #defualt url
 defaultUrl = "https://ja.wikipedia.org/wiki/%E6%97%A5%E6%9C%AC"
 defaultUrl = "https://ja.wikipedia.org/wiki/%E8%8F%B1%E5%9E%A3%E5%BB%BB%E8%88%B9"
 defaultUrl = "https://ja.wikipedia.org/wiki/%E9%95%B7%E5%B0%BE%E7%9C%9F"
-MAX_DEP = 2
 MAX_PAIR = 100
+SAVE_ITER = 10 
 HASHN = 1000007
 MAX_QUE = 1000000
 urlQue = Queue.Queue(MAX_QUE)

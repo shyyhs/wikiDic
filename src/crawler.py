@@ -1,6 +1,7 @@
 from globalSetting import *
 from utils import *
 from hashing import *
+from resumer import *
 
 def logSetting():
     logging.basicConfig(
@@ -18,35 +19,34 @@ def crawlEntry(sourceUrl):
     if (soup == None): return None,0
     if (outString is not None): 
         print (outString)
-        fileOut.write(outString)
+        with open(outFileName,'a') as fileOut:
+            fileOut.write(outString)
         printFlag=1
     return wikiUrlDic(soup),printFlag
 
-def crawl(firstUrl=defaultUrl, PAIR_LIMIT=MAX_PAIR):
-    pairNum = 0
-    urlQue.put(firstUrl)
+def crawl():
+    if (urlQue.empty()==True): urlQue.put(defaultUrl)
+    pairNum = 1
     while (not urlQue.empty()):
-        urlDic,pairAdd = crawlEntry(urlQue.get())
+        nowUrl = urlQue.get()
+        urlDic,pairAdd = crawlEntry(nowUrl)
         if (urlDic==None): continue
         pairNum+= pairAdd
-        if (pairNum>=MAX_PAIR): break
-        if (pairNum%10000==0): hashSave()
+        if (pairNum>MAX_PAIR): break
         for url in urlDic.values():
+            url = re.sub(linkRedundantPattern,'',url)
             if (not urlQue.full()):
                 urlQue.put(url)
+        if ((pairAdd==1) and pairNum%SAVE_ITER==0): statusSave()
+    statusSave()
 
 
 if (__name__=="__main__"):
     print ("clawler begins")
     print ("---------------------------------")
     logSetting()
-
-    continueFlag = 0
     preStatusFilePath = statusFileName
-    if (continueFlag == 1):
-        print ("Load the previous search status")
-        hashLoad(preStatusFilePath)
-
+    statusLoad(preStatusFilePath)
     crawl()
 
     

@@ -19,28 +19,6 @@ def checkHash(url,word):
     hashW[hw]=1
     return 1
 
-def hashSave():
-    with open(statusFileName,'w') as stFile:  
-        stFile.write(str(sum(hashU))+"\n")
-        for i in range(len(hashU)):
-            if (hashU[i]): stFile.write(str(i)+"\n")
-        stFile.write(str(sum(hashW))+"\n")
-        for i in range(len(hashW)):
-            if (hashW[i]): stFile.write(str(i)+"\n")
-
-def hashLoad(statusFileName=statusFileName):
-    with open(statusFileName,'r') as stFile:
-        urlN = int(stFile.readline())
-        print (int(urlN))
-        for i in range(urlN): 
-            index = int(stFile.readline())
-            hashU[index] = 1
-        wordN = int(stFile.readline())
-        for i in range(wordN): 
-            index = int(stFile.readline())
-            hashW[index] = 1
-
-
 if (__name__=="__main__"):
     print ("hash tesing")
     hashU[1] = 1

@@ -13,6 +13,8 @@ textEngPattern = re.compile(ur"英.*[:：][\s]*([a-zA-z0-9 ]+)[)）]",re.UNICODE
 urlEngPattern = re.compile(ur"英.*[:：][\s]*([a-zA-z0-9 ]+)$", re.UNICODE)
 bracketPattern = re.compile(ur"[(（\[].*[)）\]]", re.UNICODE)
 numberPattern = re.compile(ur"[0-9]+", re.UNICODE)
+emptyLinePattern = re.compile(ur"^\s*$",re.UNICODE)
+linkRedundantPattern = re.compile(ur"(#.*$)",re.UNICODE)
 emptyString = ur''
 
 # delete brackets(also delete the context in the brackets) around a word
