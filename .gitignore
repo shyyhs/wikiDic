@@ -3,7 +3,7 @@
 *.swp
 .*
 *.log
-*.mix
+*.mix.*
 status.txt
 
 __pycache__/
