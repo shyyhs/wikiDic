@@ -45,9 +45,10 @@ def wikiFindEngWordFromUrl(soup):
             # Go to the english link and get the Title
             enHref = link.get('href')
             if (enHref is not None):
-                enWord = webEnTitle(cookSoup(enHref)) 
-                if (enWord!="NONE"):
-                    return enWord
+                soup = cookSoup(enHref)
+                if (soup == "NONE"): continue
+                enWord = webEnTitle(soup) 
+                if (enWord!="NONE"): return enWord
     return enWord
 
 def wikiEnWord(soup):
@@ -82,17 +83,22 @@ def wikiUrlDic(soup):
     return urlDic
 
 def cookSoup(url):
-    html = requests.get(url).text
-    soup = sp(html,"lxml")
-    return soup
+    """ Not use try,except is possible, not a good habit """
+    try:
+        html = requests.get(url).text
+        soup = sp(html,"lxml")
+        return soup
+    except:
+        """ The url is inavailable """
+        return "NONE"
 
 def wikiProcess(sourceUrl):
     """
     return 0 if NG
     else return output string
     """
-    try: soup = cookSoup(sourceUrl)
-    except: return None,None
+    soup = cookSoup(sourceUrl)
+    if (soup == "NONE"): return None,None
     #Output things
     jaWord = webJaTitle(soup)
     enWord = wikiEnWord(soup)
