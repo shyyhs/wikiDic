@@ -4,6 +4,7 @@
 .*
 *.log
 *.mix
+status.txt
 
 __pycache__/
 *.py[cod]
