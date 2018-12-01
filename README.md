@@ -26,5 +26,10 @@
 5. Multithreads(Not yet)
 
 ## Usage:
-Just run $python crawler.py
+$pip install beautifulsoup4
+$python crawler.py
 
+## Some useful tools:
+1. Delete the redundant words: $ python redundantDel.py
+2. Delete the categories tag(because they are unprecise): $ python categoryDel.py
+3. If you want to tag the category(people,location or others), please use [juman++](http://nlp.ist.i.kyoto-u.ac.jp/index.php?JUMAN++)
