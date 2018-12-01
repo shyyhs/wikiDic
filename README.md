@@ -26,7 +26,7 @@
 5. Multithreads(Not yet)
 
 ## Usage:
-$pip install beautifulsoup4
+$pip install beautifulsoup4<br>
 $python crawler.py
 
 ## Some useful tools:
