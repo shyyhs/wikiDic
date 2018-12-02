@@ -17,6 +17,7 @@ month, day = localtime.split()[1:3]
 workDir = "../data/"
 outFileName = workDir + "wiki_properNoun.ja-en.mix"
 outFileNoRedun = workDir +"wiki_properNoun.ja-en.mix.noRedun"
+outFileNoCate = workDir +"wiki_properNoun.ja-en.mix.noCate"
 
 logFileName = workDir + month+day+".log"
 statusFileName = workDir + "status.txt"

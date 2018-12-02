@@ -14,7 +14,10 @@ with open(outFileName,'r') as inFile:
         line = inFile.readline().decode('utf-8').strip()
         if (line==''): break
         lineNum+=1
-        jaWord, enWord, cate = line.split(',')
+        wordLst = line.split(',')
+        jaWord = wordLst[0]
+        cate = wordLst[-1]
+        enWord = ','.join(wordLst[1:-1])
         if (dic.get(jaWord) is None):
             dic[jaWord] = enWord
             outString = jaWord+','+enWord+','+cate+'\n'
