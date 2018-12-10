@@ -23,7 +23,6 @@
 2. Crawl the whole Japanese Wikipedia
 3. Find the english translation automatically.
 4. Resume from break-point automatically. (In practice it sometimes breaks down due to the network. When it freezes, just shut it down and run "$python crawl.py" again, it will continue its work.)
-5. Multithreads(Not yet)
 
 ## Usage:
 write in python2, so python==python2<br>
@@ -34,3 +33,6 @@ $python crawler.py
 1. Delete the redundant words: $ python redundantDel.py
 2. Delete the categories tag(because they are unprecise): $ python categoryDel.py
 3. If you want to tag the category(people,location or others), please use [juman++](http://nlp.ist.i.kyoto-u.ac.jp/index.php?JUMAN++)
+
+## Result:
+Got 100,000 pairs of japanese and english words.
