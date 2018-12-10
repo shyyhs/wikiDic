@@ -9,7 +9,7 @@ http://nlp.ist.i.kyoto-u.ac.jp/index.php?JUMAN++
 
 
 outFile = open(outFileNoCate,'w')
-inFile = open(outFileName,'r')
+inFile = open(outFileNoRedun,'r')
 while (True):
     line = inFile.readline().decode('utf-8').strip()
     if (line==''): break
